@@ -72,13 +72,12 @@ Replace [PROMPT] with a descriptive, alphanumeric English prompt. Use %20 for sp
     }
     
     if (attachmentContext) {
-      systemContent += `\n\n[CRITICAL] DOCUMENT AWARENESS ENABLED:
-The user has uploaded files. You HAVE been provided with the full extracted text below. 
-DO NOT claim you cannot read files. Instead, use the following content to answer the user's questions:
-
---- DOCUMENT CONTEXT START ---
+      systemContent += `\n\n[HIGH-PRIORITY DOCUMENT CONTEXT]:
+The user has provided the following file content. You MUST use this to answer their questions.
+---
 ${attachmentContext}
---- DOCUMENT CONTEXT END ---`
+---
+DO NOT claim you cannot read files. The content is provided above.`
     }
 
     const openRouterMessages = [

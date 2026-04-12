@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Copy, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useTheme } from 'next-themes'
@@ -72,13 +72,43 @@ export function MarkdownRenderer({ content, isStreaming }: MarkdownRendererProps
 function ImageWithProgress({ src, alt }: { src?: string; alt?: string }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    if (loading && !error) {
+      const timer = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 95) return prev
+          // Non-linear progress simulation
+          const inc = prev < 30 ? 5 : prev < 70 ? 2 : 1
+          return Math.min(prev + inc, 95)
+        })
+      }, 300)
+      return () => clearInterval(timer)
+    }
+  }, [loading, error])
+
+  const handleLoad = () => {
+    setProgress(100)
+    setTimeout(() => setLoading(false), 500)
+  }
 
   return (
     <div className="flex flex-col items-center my-8 w-full max-w-2xl mx-auto">
-      <div className="relative group w-full overflow-hidden rounded-[2.5rem] border border-border/40 shadow-2xl shadow-foreground/5 bg-secondary/20 min-h-[300px] flex items-center justify-center transition-all duration-700">
+      <div className="relative group w-full overflow-hidden rounded-[2.5rem] border border-border/40 shadow-2xl shadow-foreground/5 bg-secondary/20 min-h-[400px] flex items-center justify-center transition-all duration-700">
         {loading && !error && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-secondary/40 backdrop-blur-sm z-10 space-y-4">
-            <div className="h-10 w-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-secondary/40 backdrop-blur-md z-10 space-y-6">
+            <div className="relative flex items-center justify-center">
+              <div className="h-20 w-20 border-4 border-primary/10 border-t-primary rounded-full animate-spin" />
+              <span className="absolute text-[10px] font-black text-primary">{progress}%</span>
+            </div>
+            <div className="w-48 h-1 bg-primary/10 rounded-full overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                className="h-full bg-primary"
+              />
+            </div>
             <p className="text-[10px] uppercase tracking-[0.3em] font-black text-primary/60 animate-pulse">
               Creating your artwork...
             </p>
@@ -101,7 +131,7 @@ function ImageWithProgress({ src, alt }: { src?: string; alt?: string }) {
           <img
             src={src}
             alt={alt}
-            onLoad={() => setLoading(false)}
+            onLoad={handleLoad}
             onError={() => {
               setLoading(false)
               setError(true)
