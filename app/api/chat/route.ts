@@ -9,7 +9,7 @@ export const runtime = 'nodejs'
 export const maxDuration = 60
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
-const MODEL = process.env.GROQ_MODEL || 'llama-3.1-70b-versatile'
+const MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 

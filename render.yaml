@@ -22,7 +22,7 @@ services:
       - key: GROQ_API_KEY
         sync: false
       - key: GROQ_MODEL
-        value: "llama-3.1-70b-versatile"
+        value: "llama-3.3-70b-versatile"
       - key: NEXT_PUBLIC_CHAT_API_URL
         value: /api/chat
       - key: NEXT_PUBLIC_CHAT_HISTORY_API_URL
