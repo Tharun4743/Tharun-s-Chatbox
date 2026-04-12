@@ -19,10 +19,14 @@ services:
         value: https://tharunchatbox.onrender.com
       - key: NEXT_PUBLIC_APP_URL
         value: https://tharunchatbox.onrender.com
-      - key: GROQ_API_KEY
+      - key: GROQ_API_KEYS
         sync: false
-      - key: GROQ_MODEL
-        value: "llama-3.3-70b-versatile"
+      - key: OPENROUTER_API_KEYS
+        sync: false
+      - key: OPENAI_API_KEYS
+        sync: false
+      - key: DIRECT_URL
+        sync: false
       - key: NEXT_PUBLIC_CHAT_API_URL
         value: /api/chat
       - key: NEXT_PUBLIC_CHAT_HISTORY_API_URL

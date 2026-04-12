@@ -2,14 +2,11 @@ import { createMessage, getChatById, updateChat, getUser, incrementUserUsage } f
 import { generateChatTitle, calculateCost } from '@/lib/utils'
 import { CHAT_MODES } from '@/types'
 import { NextRequest } from 'next/server'
-
 import { auth } from '@/auth'
+import { fetchWithFallback, recordTokenUsage } from '@/lib/key-manager'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
-
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
-const MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 
@@ -87,27 +84,20 @@ DO NOT claim you cannot read files. The content is provided above.`
 
     const abortController = new AbortController()
 
-    // Start AI fetch and User Message persistence in parallel
-    const [groqResponse, savedUserMessage] = await Promise.all([
-      fetch(GROQ_API_URL, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: MODEL,
-          messages: openRouterMessages,
-          stream: true,
-          temperature: 0.7,
-          max_tokens: 4096,
-        }),
-        signal: abortController.signal,
-      }),
-      chatId && saveUserMessage && messages[messages.length - 1]?.role === 'user'
-        ? createMessage({ chatId, userId, role: 'user', content: messages[messages.length - 1].content })
-        : Promise.resolve(null)
-    ])
+    // Persist user message
+    let savedUserMessage: any = null
+    if (chatId && saveUserMessage && messages[messages.length - 1]?.role === 'user') {
+      savedUserMessage = await createMessage({ chatId, userId, role: 'user', content: messages[messages.length - 1].content })
+    }
+
+    // Multi-provider fallback fetch with token-based key rotation
+    const result = await fetchWithFallback(openRouterMessages, abortController.signal)
+
+    if (!result) {
+      return new Response(JSON.stringify({ error: 'All AI providers are currently unavailable. Please try again shortly.' }), { status: 503 })
+    }
+
+    const { response: groqResponse, model: usedModel, providerName, keyValue } = result
 
     const savedUserMessageId = savedUserMessage?.id
 
@@ -170,7 +160,9 @@ DO NOT claim you cannot read files. The content is provided above.`
         } finally {
           if (chatId && fullContent) {
             const cost = calculateCost(totalTokens)
-            await createMessage({ chatId, userId, role: 'assistant', content: fullContent, model: MODEL, tokensUsed: totalTokens, cost, status: 'complete' })
+            // Record token usage against the key that was used — triggers auto-swap next request if near limit
+            recordTokenUsage(providerName, keyValue, totalTokens)
+            await createMessage({ chatId, userId, role: 'assistant', content: fullContent, model: usedModel, tokensUsed: totalTokens, cost, status: 'complete' })
             await incrementUserUsage(userId, totalTokens)
           }
           controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ done: true, tokens: totalTokens, messageId: savedUserMessageId })}\n\n`))
