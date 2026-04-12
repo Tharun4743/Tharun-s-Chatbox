@@ -7,7 +7,7 @@ import { formatMessageTime } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { MarkdownRenderer } from './markdown-renderer'
-import { Copy, Check, Pencil, Trash2, RefreshCw, Volume2, AlertCircle } from 'lucide-react'
+import { Copy, Check, Pencil, Trash2, RefreshCw, Volume2, AlertCircle, Sparkle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from '@/hooks/use-toast'
 
@@ -76,8 +76,8 @@ export function MessageBubble({ message, isLastAssistant, onEdit, onDelete, onRe
       onMouseLeave={() => setShowActions(false)}
     >
       {!isUser && (
-        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center flex-shrink-0 mt-1 shadow-sm">
-          <span className="text-white text-xs font-bold">AI</span>
+        <div className="h-10 w-10 rounded-2xl bg-foreground text-background flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-foreground/5 rotate-3 hover:rotate-0 transition-transform duration-500">
+          <Sparkle className="h-5 w-5" />
         </div>
       )}
 

@@ -57,15 +57,15 @@ export async function POST(req: NextRequest) {
 
     let systemContent = modeConfig.systemPrompt
     
-    // Enhanced Image Generation Capability (SILENT MODE)
+    // High-Resolution Image Generation (Stable Descriptive Mode)
     const randomSeed = Math.floor(Math.random() * 1000000);
     systemContent += `\n\n[IMAGE GENERATION MODE]:
-You can generate professional-grade images. 
-- DO NOT explain your process. 
-- DO NOT mention "Internal Prompt Engine" or "Sanitization" to the user.
-- INSTANTLY produce the image using this exact Markdown:
-![image](https://pollinations.ai/p/[PROMPT]?width=1024&height=1024&seed=${randomSeed})
-Replace [PROMPT] with a descriptive, alphanumeric English prompt. Use %20 for spaces.`
+You can generate high-quality images.
+- DO NOT use words like "generate", "image", "drawing" or "create" INSIDE the brackets of the prompt URL.
+- Use only descriptive, comma-separated keywords for the [PROMPT].
+- FORMAT: ![image](https://image.pollinations.ai/prompt/[PROMPT]?width=1024&height=1024&nologo=true&seed=${randomSeed})
+Example for "generate bird image":
+![image](https://image.pollinations.ai/prompt/majestic%20tropical%20parrot%20on%20branch%20vibrant%20colors%204k?width=1024&height=1024&nologo=true&seed=${randomSeed})`
 
     if (user?.memorySummary && user.memoryEnabled) {
       systemContent += `\n\nUser context from previous conversations: ${user.memorySummary}`
