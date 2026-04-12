@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { generateOTPWithAI } from '@/lib/otp'
-import { sendVerificationEmail, sendPasswordResetEmail } from '@/lib/mail'
+import { sendOTPEmail, sendResetEmail } from '@/lib/email'
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,16 +34,22 @@ export async function POST(req: NextRequest) {
       create: { identifier: email, token: code, expires },
     })
 
-    // Send email
+    // Send email using Resend
+    let emailResponse;
     if (type === 'signup') {
-      await sendVerificationEmail(email, code, message)
+      emailResponse = await sendOTPEmail(email, code, message)
     } else {
-      await sendPasswordResetEmail(email, code, message)
+      emailResponse = await sendResetEmail(email, code, message)
+    }
+
+    if (!emailResponse.success) {
+      console.error('Email Dispatch Failed:', emailResponse.error)
+      return NextResponse.json({ success: false, message: 'Failed to send OTP' }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, message: 'OTP sent successfully' })
   } catch (error) {
-    console.error('OTP Error:', error)
-    return NextResponse.json({ error: 'Failed' }, { status: 500 })
+    console.error('OTP Route Internal Error:', error)
+    return NextResponse.json({ success: false, message: 'Failed to send OTP' }, { status: 500 })
   }
 }

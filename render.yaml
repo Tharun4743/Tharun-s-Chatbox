@@ -25,15 +25,11 @@ services:
         value: /api/chat
       - key: NEXT_PUBLIC_CHAT_HISTORY_API_URL
         value: /api/chats
-      - key: SMTP_HOST
+      - key: RESEND_API_KEY
         sync: false
-      - key: SMTP_PORT
-        value: "465"
-      - key: SMTP_USER
-        sync: false
-      - key: SMTP_PASSWORD
-        sync: false
-      - key: SMTP_FROM
-        sync: false
+      - key: EMAIL_FROM
+        value: "ChatBox <onboarding@resend.dev>"
+      - key: NEXT_PUBLIC_APP_NAME
+        value: "Techy Tharun's Chatbox"
     healthCheckPath: /api/auth/session
     autoDeploy: true
