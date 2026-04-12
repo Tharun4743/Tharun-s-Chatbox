@@ -1,0 +1,62 @@
+'use client'
+
+import { useState } from 'react'
+import type { Chat } from '@/types'
+import { CHAT_MODES } from '@/types'
+import { formatTokenCount } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { MoreHorizontal, Zap } from 'lucide-react'
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuTrigger, DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu'
+import { ExportModal } from '@/components/modals/export-modal'
+
+interface ChatHeaderProps {
+  chat: Chat
+  tokensUsed?: number
+}
+
+export function ChatHeader({ chat, tokensUsed = 0 }: ChatHeaderProps) {
+  const [exportOpen, setExportOpen] = useState(false)
+  const modeConfig = CHAT_MODES[chat.mode] || CHAT_MODES.normal
+
+  return (
+    <>
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-border/50 glass sticky top-0 z-10">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <span className="text-lg">{modeConfig.icon}</span>
+          <div className="min-w-0">
+            <h1 className="text-sm font-semibold truncate">{chat.title}</h1>
+            <p className="text-xs text-muted-foreground">{modeConfig.label}</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {tokensUsed > 0 && (
+            <Badge variant="secondary" className="text-xs gap-1 hidden sm:flex">
+              <Zap className="h-3 w-3" />
+              {formatTokenCount(tokensUsed)} tokens
+            </Badge>
+          )}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon-sm">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setExportOpen(true)}>
+                Export conversation
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      <ExportModal open={exportOpen} onClose={() => setExportOpen(false)} chat={chat} />
+    </>
+  )
+}

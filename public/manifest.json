@@ -1,0 +1,13 @@
+{
+  "name": "Techy Tharun's Chatbox",
+  "short_name": "TechyChat",
+  "description": "Premium AI assistant powered by GPT-4o",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "icons": [],
+  "categories": ["productivity", "utilities"],
+  "screenshots": []
+}

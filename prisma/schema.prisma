@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id                  String       @id @default(cuid())
+  name                String?
+  email               String       @unique
+  emailVerified       DateTime?
+  password            String?
+  image               String?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  plan                String       @default("free")
+  dailyMessageCount   Int          @default(0)
+  dailyResetAt        DateTime     @default(now())
+  totalMessages       Int          @default(0)
+  totalTokens         Int          @default(0)
+  theme               String       @default("system")
+  soundEnabled        Boolean      @default(true)
+  memoryEnabled       Boolean      @default(true)
+  memorySummary       String?
+  lastActiveChatId    String?
+  onboardingCompleted Boolean      @default(false)
+  accounts            Account[]
+  chats               Chat[]
+  files               FileUpload[]
+  messages            Message[]
+  sessions            Session[]
+  usageStats          UsageStat[]
+}
+
+model Chat {
+  id            String       @id @default(cuid())
+  userId        String
+  title         String       @default("New Chat")
+  mode          String       @default("normal")
+  pinned        Boolean      @default(false)
+  archived      Boolean      @default(false)
+  aiModel       String       @default("openai/gpt-4o")
+  systemPrompt  String?
+  messageCount  Int          @default(0)
+  totalTokens   Int          @default(0)
+  lastMessageAt DateTime     @default(now())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  files         FileUpload[]
+  messages      Message[]
+
+  @@index([userId, archived, lastMessageAt(sort: Desc)])
+  @@index([userId, pinned])
+}
+
+model Message {
+  id              String   @id @default(cuid())
+  chatId          String
+  userId          String
+  role            String
+  content         String
+  aiModel         String?
+  tokensUsed      Int      @default(0)
+  cost            Float    @default(0)
+  status          String   @default("complete")
+  errorMessage    String?
+  edited          Boolean  @default(false)
+  originalContent String?
+  hasAttachments  Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  chat            Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([chatId, createdAt])
+}
+
+model FileUpload {
+  id            String   @id @default(cuid())
+  userId        String
+  chatId        String?
+  name          String
+  originalName  String
+  mimeType      String
+  size          Int
+  url           String   @default("")
+  extractedText String?
+  status        String   @default("ready")
+  errorMessage  String?
+  createdAt     DateTime @default(now())
+  chat          Chat?    @relation(fields: [chatId], references: [id])
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([chatId])
+}
+
+model UsageStat {
+  id           String @id @default(cuid())
+  userId       String
+  date         String
+  messageCount Int    @default(0)
+  tokensUsed   Int    @default(0)
+  cost         Float  @default(0)
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
