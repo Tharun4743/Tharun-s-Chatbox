@@ -25,5 +25,15 @@ services:
         value: /api/chat
       - key: NEXT_PUBLIC_CHAT_HISTORY_API_URL
         value: /api/chats
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM
+        sync: false
     healthCheckPath: /api/auth/session
     autoDeploy: true
