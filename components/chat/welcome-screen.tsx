@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { getWarmGreeting, PROMPT_SUGGESTIONS } from '@/lib/utils'
 import { CHAT_MODES } from '@/types'
 import { Button } from '@/components/ui/button'
-import { Sparkles } from 'lucide-react'
+import { Sparkle, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { ChatInput } from './chat-input'
 import type { FileAttachment } from '@/types'
@@ -55,10 +55,10 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1, duration: 0.4 }}
-            className="flex justify-center mb-6"
+            className="flex justify-center mb-8"
           >
-            <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-xl shadow-violet-500/25">
-              <Sparkles className="h-8 w-8 text-white" />
+            <div className="h-16 w-16 rounded-[2.5rem] bg-foreground text-background flex items-center justify-center shadow-2xl shadow-foreground/10 rotate-3 hover:rotate-0 transition-transform duration-500">
+              <Sparkle className="h-8 w-8" />
             </div>
           </motion.div>
 
@@ -67,19 +67,19 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-2xl md:text-3xl font-bold mb-2 flex flex-col sm:flex-row items-center justify-center gap-2"
+            className="text-3xl md:text-5xl font-serif tracking-tight mb-4 flex flex-col sm:flex-row items-center justify-center gap-3 text-foreground"
           >
             {greeting}
-            <span className="animate-bounce-slow text-3xl sm:text-inherit">👋</span>
+            <span className="animate-bounce-slow text-4xl sm:text-inherit">👋</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-muted-foreground mb-8"
+            className="text-muted-foreground/60 max-w-md mx-auto mb-12 text-base md:text-lg font-medium italic"
           >
-            I'm your AI assistant. Ask me anything, or pick a mode below.
+            "Simply secure • Simply Techy Tharun"
           </motion.p>
 
           {/* Mode cards */}
@@ -87,13 +87,13 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12"
           >
             {Object.entries(CHAT_MODES).slice(0, 4).map(([key, mode]) => (
               <button
                 key={key}
                 suppressHydrationWarning
-                className="flex flex-col items-center gap-2 p-3 rounded-2xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 group"
+                className="flex flex-col items-center gap-3 p-5 rounded-[2rem] bg-secondary/30 border border-transparent hover:border-primary/20 hover:bg-secondary/50 transition-all duration-300 group"
                 onClick={async () => {
                   try {
                     const res = await fetch('/api/chats', {
@@ -109,8 +109,10 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
                   }
                 }}
               >
-                <span className="text-2xl group-hover:scale-110 transition-transform">{mode.icon}</span>
-                <span className="text-xs font-medium">{mode.label}</span>
+                <div className="h-12 w-12 rounded-2xl bg-background flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="text-2xl group-hover:scale-110 transition-transform">{mode.icon}</span>
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-primary transition-colors">{mode.label}</span>
               </button>
             ))}
           </motion.div>
@@ -120,21 +122,40 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="flex sm:flex-wrap items-center justify-start sm:justify-center gap-2 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
+            className="flex sm:flex-wrap items-center justify-start sm:justify-center gap-3 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
           >
             {PROMPT_SUGGESTIONS.slice(0, 4).map((suggestion) => (
               <button
                 key={suggestion.text}
                 suppressHydrationWarning
-                className="flex flex-shrink-0 items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-muted/40 hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all duration-200 border border-border/30 hover:border-border whitespace-nowrap"
+                className="flex flex-shrink-0 items-center gap-2 px-6 py-3 rounded-full bg-background hover:bg-secondary border border-border/40 hover:border-primary/20 text-xs font-semibold text-muted-foreground hover:text-primary transition-all duration-300 shadow-sm"
                 onClick={() => handleSend(suggestion.text)}
               >
-                <span className="text-base">{suggestion.icon}</span>
                 <span>{suggestion.text}</span>
+                <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             ))}
           </motion.div>
         </motion.div>
+      </div>
+
+      <div className="absolute bottom-6 w-full text-center px-4 pointer-events-none">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground/40 pointer-events-auto"
+        >
+          Crafted with 🖤 by{" "}
+          <a
+            href="https://tharunkumark4743.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:text-primary/80 underline-offset-4 hover:underline transition-colors"
+          >
+            Tharun Kumar
+          </a>
+        </motion.p>
       </div>
 
       <ChatInput

@@ -56,11 +56,22 @@ export async function POST(req: NextRequest) {
     ])
 
     let systemContent = modeConfig.systemPrompt
+    
+    // Add Image Generation Capability Instruction
+    systemContent += `\n\nIMAGE GENERATION CAPABILITY:
+You can generate images for the user using Markdown. If the user asks for an image, artwork, or photo, use this exact format:
+![image](https://pollinations.ai/p/[PROMPT]?width=1024&height=1024&nologo=true)
+Replace [PROMPT] with a descriptive, highly-detailed English prompt for the image. Use %20 for spaces. 
+Example: ![image](https://pollinations.ai/p/a%20futuristic%20city%20with%20neon%20lights?width=1024&height=1024&nologo=true)`
+
     if (user?.memorySummary && user.memoryEnabled) {
       systemContent += `\n\nUser context from previous conversations: ${user.memorySummary}`
     }
+    
     if (attachmentContext) {
-      systemContent += `\n\nAttached content for reference:\n${attachmentContext}`
+      systemContent += `\n\nDOCUMENT CONTEXT (Extracted from uploaded files):
+Please analyze and refer to this content when answering the user's questions about their files:
+${attachmentContext}`
     }
 
     const openRouterMessages = [

@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import type { Chat } from '@/types'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Search, PanelLeftClose, PanelLeft, Sparkles } from 'lucide-react'
+import { Plus, Search, PanelLeftClose, PanelLeft, Sparkle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -64,10 +64,10 @@ export function Sidebar({
     <div className={cn('flex flex-col h-full border-r border-border/50 bg-sidebar', className)}>
       <div className="flex items-center gap-2 p-4 border-b border-border/30">
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-            <Sparkles className="h-4 w-4 text-white" />
+          <div className="h-8 w-8 rounded-[0.75rem] bg-foreground text-background flex items-center justify-center flex-shrink-0 shadow-sm">
+            <Sparkle className="h-4 w-4" />
           </div>
-          <span className="font-semibold text-sm truncate">Techy Tharun's Chatbox</span>
+          <span className="font-serif font-bold text-sm truncate tracking-tight">Techy Tharun</span>
         </div>
         <Button variant="ghost" size="icon-sm" onClick={onCollapse} className="flex-shrink-0">
           <PanelLeftClose className="h-4 w-4" />
@@ -135,8 +135,18 @@ export function Sidebar({
         )}
       </ScrollArea>
 
-      <div className="p-3 border-t border-border/30">
+      <div className="flex flex-col gap-2 p-3 border-t border-border/30 bg-muted/20">
         <UserMenu />
+        {!collapsed && (
+          <a
+            href="https://tharunkumark4743.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[9px] uppercase tracking-[0.2em] font-bold text-muted-foreground/40 hover:text-primary text-center py-2 transition-colors"
+          >
+            Built with 🖤 by Tharun Kumar
+          </a>
+        )}
       </div>
     </div>
   )
