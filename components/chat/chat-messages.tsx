@@ -31,7 +31,7 @@ export function ChatMessages({
     : null
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 space-y-1 pb-32 md:pb-6">
+    <div className="max-w-3xl mx-auto px-4 py-6 space-y-1 pb-40 md:pb-6">
       <AnimatePresence initial={false}>
         {messages.map((message, index) => (
           <MessageBubble

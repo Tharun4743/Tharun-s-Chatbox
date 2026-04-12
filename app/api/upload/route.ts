@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { GUEST_USER_ID, auth } from '@/lib/auth'
+import { ensureGuestUser } from '@/lib/db'
 import { NextRequest } from 'next/server'
 
 export const runtime = 'nodejs'
@@ -39,6 +40,10 @@ export async function POST(req: NextRequest) {
 
     const session = await auth()
     const userId = session?.user?.id || GUEST_USER_ID
+
+    if (userId === GUEST_USER_ID) {
+      await ensureGuestUser()
+    }
 
     const record = await prisma.fileUpload.create({
       data: {

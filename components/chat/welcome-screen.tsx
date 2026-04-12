@@ -43,7 +43,7 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 flex flex-col items-center justify-center px-4 pb-32 md:pb-0">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 md:pb-0">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -139,7 +139,7 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
         </motion.div>
       </div>
 
-      <div className="absolute bottom-6 w-full text-center px-4 pointer-events-none">
+      <div className="w-full text-center px-4 pointer-events-none pb-6 md:pb-8 mt-auto">
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
