@@ -35,13 +35,11 @@ npm install
 ```
 
 ### 3. Environment Variables
-Create a `.env.local` file with the following:
-```env
-DATABASE_URL=
-NEXTAUTH_SECRET=
-NEXTAUTH_URL=http://localhost:3000
-OPENROUTER_API_KEY=
+Copy the example environment file and fill in your credentials:
+```bash
+cp .env.example .env.local
 ```
+*(Ensure you never commit your actual `.env.local` file)*
 
 ### 4. Run the development server
 ```bash
