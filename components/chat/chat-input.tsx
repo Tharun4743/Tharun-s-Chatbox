@@ -127,7 +127,7 @@ export function ChatInput({ onSend, onStop, onModeChange, isStreaming, isThinkin
   )
 
   return (
-    <div className="sticky bottom-0 z-20 pb-4 md:pb-6 px-4 bg-gradient-to-t from-background via-background to-transparent pt-4">
+    <div className="sticky bottom-0 z-20 pb-20 md:pb-6 px-4 bg-gradient-to-t from-background via-background to-transparent pt-4">
       <div className="max-w-3xl mx-auto">
         {/* Slash command menu */}
         <AnimatePresence>

@@ -98,6 +98,10 @@ const config: Config = {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0' },
         },
+        'bounce-slow': {
+          '0%, 100%': { transform: 'translateY(-5%)', animationTimingFunction: 'cubic-bezier(0.8,0,1,1)' },
+          '50%': { transform: 'none', animationTimingFunction: 'cubic-bezier(0,0,0.2,1)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -108,6 +112,7 @@ const config: Config = {
         'typing-dot': 'typing-dot 1.2s ease-in-out infinite',
         'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
         blink: 'blink 1s step-end infinite',
+        'bounce-slow': 'bounce-slow 3s infinite',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

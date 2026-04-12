@@ -67,9 +67,10 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-3xl font-bold mb-2"
+            className="text-2xl md:text-3xl font-bold mb-2 flex flex-col sm:flex-row items-center justify-center gap-2"
           >
             {greeting}
+            <span className="animate-bounce-slow text-3xl sm:text-inherit">👋</span>
           </motion.h1>
 
           <motion.p
@@ -119,16 +120,16 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="flex flex-wrap justify-center gap-2"
+            className="flex sm:flex-wrap items-center justify-start sm:justify-center gap-2 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
           >
             {PROMPT_SUGGESTIONS.slice(0, 4).map((suggestion) => (
               <button
                 key={suggestion.text}
                 suppressHydrationWarning
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-muted/50 hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all duration-200 border border-border/30 hover:border-border"
+                className="flex flex-shrink-0 items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-muted/40 hover:bg-muted text-sm text-muted-foreground hover:text-foreground transition-all duration-200 border border-border/30 hover:border-border whitespace-nowrap"
                 onClick={() => handleSend(suggestion.text)}
               >
-                <span>{suggestion.icon}</span>
+                <span className="text-base">{suggestion.icon}</span>
                 <span>{suggestion.text}</span>
               </button>
             ))}
