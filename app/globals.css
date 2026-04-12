@@ -28,13 +28,25 @@
 }
 
 .dark {
-  --background: 20 10% 8%;
-  --foreground: 34 20% 92%;
-  --card: 20 10% 10%;
-  --card-foreground: 34 20% 92%;
-  --primary: 12 50% 55%; /* Rich Terracotta */
-  --muted: 20 10% 15%;
-  --border: 20 10% 15%;
+  --background: 240 10% 4%; /* Deep Void */
+  --foreground: 0 0% 98%;
+  --card: 240 10% 6%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 6%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 350 45% 75%; /* Dusky Rose */
+  --primary-foreground: 350 30% 20%;
+  --secondary: 240 10% 10%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 10% 12%;
+  --muted-foreground: 240 5% 65%;
+  --accent: 350 30% 15%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 10% 12%;
+  --input: 240 10% 12%;
+  --ring: 350 45% 75%;
 }
 
 @layer base {
