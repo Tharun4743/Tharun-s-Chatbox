@@ -25,10 +25,10 @@ services:
         value: /api/chat
       - key: NEXT_PUBLIC_CHAT_HISTORY_API_URL
         value: /api/chats
-      - key: RESEND_API_KEY
+      - key: GOOGLE_CLIENT_ID
         sync: false
-      - key: EMAIL_FROM
-        value: "ChatBox <onboarding@resend.dev>"
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
       - key: NEXT_PUBLIC_APP_NAME
         value: "Techy Tharun's Chatbox"
     healthCheckPath: /api/auth/session

@@ -2,57 +2,23 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Mail, Lock, Loader2, Heart } from 'lucide-react'
+import { LogIn, Loader2, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { toast } from '@/hooks/use-toast'
+import Link from 'next/link'
 
 export default function LoginPage() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSocialLogin = async (provider: string) => {
     setIsLoading(true)
-
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        // Map common error identifiers to human messages
-        const errorMsg = result.error.includes("password") 
-          ? "The password you entered is incorrect." 
-          : result.error.includes("email") || result.error.includes("No account")
-          ? "No account found with this email."
-          : "Sign in failed. Please check your details."
-
-        toast({
-          title: 'Authentication Failed',
-          description: errorMsg,
-          variant: 'destructive',
-        })
-      } else {
-        toast({ 
-          title: 'Welcome back!', 
-          description: 'Let\'s pick up right where we left off.' 
-        })
-        router.push('/chat')
-        router.refresh()
-      }
+      await signIn(provider, { callbackUrl: '/chat' })
     } catch (error) {
       toast({
-        title: 'Oops!',
-        description: 'Something went wrong on our end. Please try again.',
+        title: 'Authentication failed',
+        description: 'Please try again.',
         variant: 'destructive',
       })
     } finally {
@@ -69,76 +35,56 @@ export default function LoginPage() {
     >
       <div className="text-center space-y-2">
         <div className="inline-flex items-center justify-center p-2 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-500 mb-2">
-          <Heart className="h-5 w-5 fill-current" />
+          <LogIn className="h-5 w-5 fill-current" />
         </div>
-        <h2 className="text-3xl font-bold tracking-tight">Hello again!</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Welcome Back!</h2>
         <p className="text-muted-foreground text-sm">
-          It's good to see you. Please sign in to continue.
+          Sign in to your account with a single click.
         </p>
       </div>
 
-      <div className="bg-card border border-border/50 rounded-3xl p-8 shadow-xl shadow-foreground/5 backdrop-blur-sm">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground ml-1">Email</Label>
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="Where should we reach you?"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="pl-12 h-12 bg-muted/30 border-none rounded-2xl focus-visible:ring-primary/20"
-                required
-                suppressHydrationWarning
-              />
-            </div>
-          </div>
+      <div className="bg-card border border-border/50 rounded-3xl p-8 shadow-xl shadow-foreground/5 backdrop-blur-sm space-y-6">
+        <Button
+          type="button"
+          className="w-full h-14 bg-white hover:bg-white/90 text-black border border-border/50 rounded-2xl text-base font-bold shadow-lg shadow-foreground/5 transition-all active:scale-[0.98] flex items-center justify-center gap-4"
+          onClick={() => handleSocialLogin('google')}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 animate-spin text-black/50" />
+          ) : (
+            <>
+              <svg className="h-6 w-6" viewBox="0 0 24 24">
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81.38z"
+                  fill="#FBBC05"
+                />
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"
+                />
+              </svg>
+              Continue with Google
+            </>
+          )}
+        </Button>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between ml-1">
-              <Label htmlFor="password" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Password</Label>
-              <Link
-                href="/forgot-password"
-                className="text-xs font-medium text-primary hover:underline"
-              >
-                Forgot?
-              </Link>
-            </div>
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
-              <Input
-                id="password"
-                type="password"
-                placeholder="Your secret key"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="pl-12 h-12 bg-muted/30 border-none rounded-2xl focus-visible:ring-primary/20"
-                required
-                suppressHydrationWarning
-              />
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full h-12 bg-primary hover:bg-primary/90 rounded-2xl text-sm font-bold shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
-            disabled={isLoading}
-            suppressHydrationWarning
-          >
-            {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
-            ) : (
-              "Sign In"
-            )}
-          </Button>
-        </form>
+        <p className="text-center text-xs text-muted-foreground">
+          By continuing, you agree to our terms of service and privacy policy.
+        </p>
       </div>
 
       <div className="text-center space-y-4">
         <p className="text-sm text-muted-foreground">
-          New here?{' '}
+          New to the family?{' '}
           <Link href="/signup" className="font-bold text-foreground hover:text-primary transition-colors">
             Create an account
           </Link>
@@ -147,7 +93,7 @@ export default function LoginPage() {
         <div className="h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
         
         <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-bold">
-          Simply secure • Simply Techy Tharun
+          Simply secure • Techy Tharun
         </p>
       </div>
     </motion.div>
