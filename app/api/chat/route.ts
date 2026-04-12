@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
           messages: openRouterMessages,
           stream: true,
           temperature: 0.7,
-          max_tokens: 2048,
+          max_tokens: 1024,
           stream_options: { include_usage: true },
         }),
         signal: abortController.signal,
