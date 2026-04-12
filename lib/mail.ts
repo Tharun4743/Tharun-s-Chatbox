@@ -3,11 +3,20 @@ import nodemailer from 'nodemailer'
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: false, // true for 465, false for other ports
+  secure: false, 
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
   },
+})
+
+// Verify connection configuration
+transporter.verify(function (error, success) {
+  if (error) {
+    console.error('SMTP Connection Error:', error)
+  } else {
+    console.log('SMTP Server is ready to take our messages')
+  }
 })
 
 export async function sendVerificationEmail(email: string, code: string, message: string) {
@@ -28,7 +37,12 @@ export async function sendVerificationEmail(email: string, code: string, message
     `,
   }
 
-  await transporter.sendMail(mailOptions)
+  try {
+    await transporter.sendMail(mailOptions)
+  } catch (error) {
+    console.error('Email Send Error:', error)
+    throw error
+  }
 }
 
 export async function sendPasswordResetEmail(email: string, code: string, message: string) {
