@@ -59,21 +59,66 @@ export function MarkdownRenderer({ content, isStreaming }: MarkdownRendererProps
             )
           },
           img({ src, alt }) {
-            return (
-              <div className="flex flex-col items-center my-6">
-                <div className="relative group overflow-hidden rounded-[2rem] border border-border/40 shadow-xl shadow-foreground/5 transition-transform hover:scale-[1.02] duration-500">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt={alt} className="max-w-full h-auto block" />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors pointer-events-none" />
-                </div>
-                {alt && <span className="mt-3 text-[10px] uppercase tracking-widest font-bold text-muted-foreground/50">{alt}</span>}
-              </div>
-            )
+            return <ImageWithProgress src={src} alt={alt} />
           },
         }}
       >
         {content}
       </ReactMarkdown>
+    </div>
+  )
+}
+
+function ImageWithProgress({ src, alt }: { src?: string; alt?: string }) {
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+
+  return (
+    <div className="flex flex-col items-center my-8 w-full max-w-2xl mx-auto">
+      <div className="relative group w-full overflow-hidden rounded-[2.5rem] border border-border/40 shadow-2xl shadow-foreground/5 bg-secondary/20 min-h-[300px] flex items-center justify-center transition-all duration-700">
+        {loading && !error && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-secondary/40 backdrop-blur-sm z-10 space-y-4">
+            <div className="h-10 w-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+            <p className="text-[10px] uppercase tracking-[0.3em] font-black text-primary/60 animate-pulse">
+              Creating your artwork...
+            </p>
+          </div>
+        )}
+
+        {error ? (
+          <div className="flex flex-col items-center gap-3 p-10 text-center">
+            <div className="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
+              <span className="text-xl">⚠️</span>
+            </div>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+              Generation Unstable
+            </p>
+            <p className="text-[10px] text-muted-foreground/60 italic">
+              "The universe is shy today. Please try a different prompt."
+            </p>
+          </div>
+        ) : (
+          <img
+            src={src}
+            alt={alt}
+            onLoad={() => setLoading(false)}
+            onError={() => {
+              setLoading(false)
+              setError(true)
+            }}
+            className={cn(
+              "max-w-full h-auto block transition-all duration-1000",
+              loading ? "opacity-0 scale-95 blur-xl" : "opacity-100 scale-100 blur-0"
+            )}
+          />
+        )}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors pointer-events-none" />
+      </div>
+      {alt && !error && (
+        <span className="mt-4 text-[9px] uppercase tracking-[0.4em] font-black text-muted-foreground/40 text-center px-4 leading-relaxed">
+          {alt}
+        </span>
+      )}
     </div>
   )
 }
