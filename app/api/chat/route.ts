@@ -57,22 +57,30 @@ export async function POST(req: NextRequest) {
 
     let systemContent = modeConfig.systemPrompt
     
-    // Add Image Generation Capability Instruction with Cache-Busting Seed
+    // Enhanced Image Generation Capability (Prompt Engineering Edition)
     const randomSeed = Math.floor(Math.random() * 1000000);
-    systemContent += `\n\nIMAGE GENERATION CAPABILITY:
-You can generate high-quality images for the user using Markdown. If the user asks for an image, artwork, or photo, use this exact format:
-![image](https://image.pollinations.ai/prompt/[PROMPT]?nologo=true&width=1024&height=1024&seed=${randomSeed})
-Replace [PROMPT] with a descriptive, highly-detailed English prompt for the image. Use %20 for spaces. 
-Example: ![image](https://image.pollinations.ai/prompt/a%20futuristic%20city%20with%20neon%20lights?nologo=true&width=1024&height=1024&seed=${randomSeed})`
+    systemContent += `\n\n[IMAGE GENERATION MODE]:
+You can generate stunning, professional-grade images. When asked:
+1. INTERNAL PROMPT ENGINEERING: Convert the user's request into a clean, descriptive, comma-separated English prompt.
+2. SANITIZATION: Remove ALL punctuation (commas, periods, quotes) from the prompt. Use only alphanumeric characters and %20 for spaces.
+3. FORMAT: Use this exact Markdown format:
+![image](https://pollinations.ai/p/[PROMPT]?width=1024&height=1024&seed=${randomSeed}&model=flux)
+
+Example for "generate ice bear":
+![image](https://pollinations.ai/p/majestic%20polar%20bear%20on%20arctic%20ice%20cinematic%20lighting?width=1024&height=1024&seed=${randomSeed}&model=flux)`
 
     if (user?.memorySummary && user.memoryEnabled) {
       systemContent += `\n\nUser context from previous conversations: ${user.memorySummary}`
     }
     
     if (attachmentContext) {
-      systemContent += `\n\nDOCUMENT CONTEXT (Extracted from uploaded files):
-Please analyze and refer to this content when answering the user's questions about their files:
-${attachmentContext}`
+      systemContent += `\n\n[CRITICAL] DOCUMENT AWARENESS ENABLED:
+The user has uploaded files. You HAVE been provided with the full extracted text below. 
+DO NOT claim you cannot read files. Instead, use the following content to answer the user's questions:
+
+--- DOCUMENT CONTEXT START ---
+${attachmentContext}
+--- DOCUMENT CONTEXT END ---`
     }
 
     const openRouterMessages = [
