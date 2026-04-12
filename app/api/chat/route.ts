@@ -57,12 +57,13 @@ export async function POST(req: NextRequest) {
 
     let systemContent = modeConfig.systemPrompt
     
-    // Add Image Generation Capability Instruction
+    // Add Image Generation Capability Instruction with Cache-Busting Seed
+    const randomSeed = Math.floor(Math.random() * 1000000);
     systemContent += `\n\nIMAGE GENERATION CAPABILITY:
-You can generate images for the user using Markdown. If the user asks for an image, artwork, or photo, use this exact format:
-![image](https://image.pollinations.ai/prompt/[PROMPT]?nologo=true&width=1024&height=1024)
+You can generate high-quality images for the user using Markdown. If the user asks for an image, artwork, or photo, use this exact format:
+![image](https://image.pollinations.ai/prompt/[PROMPT]?nologo=true&width=1024&height=1024&seed=${randomSeed})
 Replace [PROMPT] with a descriptive, highly-detailed English prompt for the image. Use %20 for spaces. 
-Example: ![image](https://image.pollinations.ai/prompt/a%20futuristic%20city%20with%20neon%20lights?nologo=true&width=1024&height=1024)`
+Example: ![image](https://image.pollinations.ai/prompt/a%20futuristic%20city%20with%20neon%20lights?nologo=true&width=1024&height=1024&seed=${randomSeed})`
 
     if (user?.memorySummary && user.memoryEnabled) {
       systemContent += `\n\nUser context from previous conversations: ${user.memorySummary}`

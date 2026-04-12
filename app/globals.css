@@ -5,48 +5,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Outfit:wght@300;400;500;600&display=swap');
 
 :root {
-  --background: 34 30% 98%; /* Alabaster/Paper */
-  --foreground: 20 10% 12%; /* Off-Charcoal */
+  --background: 34 30% 96%; /* Warm Linen */
+  --foreground: 220 20% 12%; /* Deep Indigo/Ink */
   --card: 0 0% 100%;
-  --card-foreground: 20 10% 12%;
+  --card-foreground: 220 20% 12%;
   --popover: 0 0% 100%;
-  --popover-foreground: 20 10% 12%;
-  --primary: 12 45% 45%; /* Terracotta/Earth */
+  --popover-foreground: 220 20% 12%;
+  --primary: 25 90% 55%; /* Sunrise Orange */
   --primary-foreground: 0 0% 100%;
-  --secondary: 35 20% 92%; /* Sand/Bone */
-  --secondary-foreground: 12 30% 20%;
-  --muted: 35 15% 94%;
-  --muted-foreground: 20 10% 45%;
-  --accent: 156 20% 40%; /* Sage/Leaf */
-  --accent-foreground: 0 0% 100%;
+  --secondary: 35 25% 90%; 
+  --secondary-foreground: 220 20% 15%;
+  --muted: 35 20% 92%;
+  --muted-foreground: 220 10% 45%;
+  --accent: 45 90% 50%; /* Golden Ray */
+  --accent-foreground: 220 20% 10%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --border: 35 15% 88%;
-  --input: 35 15% 88%;
-  --ring: 12 45% 45%;
-  --radius: 1rem;
+  --border: 35 15% 85%;
+  --input: 35 15% 85%;
+  --ring: 25 90% 55%;
+  --radius: 1.5rem;
 }
 
 .dark {
-  --background: 240 10% 4%; /* Deep Void */
-  --foreground: 0 0% 98%;
-  --card: 240 10% 6%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 6%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 350 45% 75%; /* Dusky Rose */
-  --primary-foreground: 350 30% 20%;
-  --secondary: 240 10% 10%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 10% 12%;
-  --muted-foreground: 240 5% 65%;
-  --accent: 350 30% 15%;
-  --accent-foreground: 0 0% 98%;
+  --background: 20 15% 10%; /* Deep Espresso */
+  --foreground: 34 30% 95%;
+  --card: 20 15% 12%;
+  --card-foreground: 34 30% 95%;
+  --popover: 20 15% 12%;
+  --popover-foreground: 34 30% 95%;
+  --primary: 25 90% 65%; /* Bright Sunrise */
+  --primary-foreground: 20 15% 10%;
+  --secondary: 20 10% 15%;
+  --secondary-foreground: 34 30% 90%;
+  --muted: 20 10% 18%;
+  --muted-foreground: 34 10% 70%;
+  --accent: 45 90% 60%; /* Bright Gold */
+  --accent-foreground: 20 15% 10%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 10% 12%;
-  --input: 240 10% 12%;
-  --ring: 350 45% 75%;
+  --border: 20 15% 18%;
+  --input: 20 15% 18%;
+  --ring: 25 90% 65%;
 }
 
 @layer base {
