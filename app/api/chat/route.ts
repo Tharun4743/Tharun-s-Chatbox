@@ -60,9 +60,9 @@ export async function POST(req: NextRequest) {
     // Add Image Generation Capability Instruction
     systemContent += `\n\nIMAGE GENERATION CAPABILITY:
 You can generate images for the user using Markdown. If the user asks for an image, artwork, or photo, use this exact format:
-![image](https://pollinations.ai/p/[PROMPT]?width=1024&height=1024&nologo=true)
+![image](https://image.pollinations.ai/prompt/[PROMPT]?nologo=true&width=1024&height=1024)
 Replace [PROMPT] with a descriptive, highly-detailed English prompt for the image. Use %20 for spaces. 
-Example: ![image](https://pollinations.ai/p/a%20futuristic%20city%20with%20neon%20lights?width=1024&height=1024&nologo=true)`
+Example: ![image](https://image.pollinations.ai/prompt/a%20futuristic%20city%20with%20neon%20lights?nologo=true&width=1024&height=1024)`
 
     if (user?.memorySummary && user.memoryEnabled) {
       systemContent += `\n\nUser context from previous conversations: ${user.memorySummary}`
