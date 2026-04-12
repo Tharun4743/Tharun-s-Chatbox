@@ -57,17 +57,15 @@ export async function POST(req: NextRequest) {
 
     let systemContent = modeConfig.systemPrompt
     
-    // Enhanced Image Generation Capability (Prompt Engineering Edition)
+    // Enhanced Image Generation Capability (SILENT MODE)
     const randomSeed = Math.floor(Math.random() * 1000000);
     systemContent += `\n\n[IMAGE GENERATION MODE]:
-You can generate stunning, professional-grade images. When asked:
-1. INTERNAL PROMPT ENGINEERING: Convert the user's request into a clean, descriptive, comma-separated English prompt.
-2. SANITIZATION: Remove ALL punctuation (commas, periods, quotes) from the prompt. Use only alphanumeric characters and %20 for spaces.
-3. FORMAT: Use this exact Markdown format:
-![image](https://pollinations.ai/p/[PROMPT]?width=1024&height=1024&seed=${randomSeed}&model=flux)
-
-Example for "generate ice bear":
-![image](https://pollinations.ai/p/majestic%20polar%20bear%20on%20arctic%20ice%20cinematic%20lighting?width=1024&height=1024&seed=${randomSeed}&model=flux)`
+You can generate professional-grade images. 
+- DO NOT explain your process. 
+- DO NOT mention "Internal Prompt Engine" or "Sanitization" to the user.
+- INSTANTLY produce the image using this exact Markdown:
+![image](https://pollinations.ai/p/[PROMPT]?width=1024&height=1024&seed=${randomSeed})
+Replace [PROMPT] with a descriptive, alphanumeric English prompt. Use %20 for spaces.`
 
     if (user?.memorySummary && user.memoryEnabled) {
       systemContent += `\n\nUser context from previous conversations: ${user.memorySummary}`
