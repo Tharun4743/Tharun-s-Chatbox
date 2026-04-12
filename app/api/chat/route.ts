@@ -8,8 +8,8 @@ import { auth } from '@/auth'
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
-const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions'
-const MODEL = process.env.OPENROUTER_MODEL || 'openai/gpt-4o'
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
+const MODEL = process.env.GROQ_MODEL || 'llama-3.1-70b-versatile'
 
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 
@@ -71,22 +71,19 @@ export async function POST(req: NextRequest) {
     const abortController = new AbortController()
 
     // Start AI fetch and User Message persistence in parallel
-    const [openRouterResponse, savedUserMessage] = await Promise.all([
-      fetch(OPENROUTER_API_URL, {
+    const [groqResponse, savedUserMessage] = await Promise.all([
+      fetch(GROQ_API_URL, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-          'X-Title': "Techy Tharun's Chatbox",
         },
         body: JSON.stringify({
           model: MODEL,
           messages: openRouterMessages,
           stream: true,
           temperature: 0.7,
-          max_tokens: 1024,
-          stream_options: { include_usage: true },
+          max_tokens: 4096,
         }),
         signal: abortController.signal,
       }),
@@ -106,17 +103,17 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    if (!openRouterResponse.ok) {
-      const errText = await openRouterResponse.text()
+    if (!groqResponse.ok) {
+      const errText = await groqResponse.text()
       let errorMessage = 'AI service temporarily unavailable.'
       try {
         const errorData = JSON.parse(errText)
         errorMessage = errorData.error?.message || errorMessage
       } catch (e) {
-        console.error('Error parsing OpenRouter error response:', e)
+        console.error('Error parsing Groq error response:', e)
       }
-      console.error('OpenRouter error:', openRouterResponse.status, errText)
-      return new Response(JSON.stringify({ error: errorMessage }), { status: openRouterResponse.status })
+      console.error('Groq error:', groqResponse.status, errText)
+      return new Response(JSON.stringify({ error: errorMessage }), { status: groqResponse.status })
     }
 
     let fullContent = ''
@@ -124,7 +121,7 @@ export async function POST(req: NextRequest) {
 
     const stream = new ReadableStream({
       async start(controller) {
-        const reader = openRouterResponse.body!.getReader()
+        const reader = groqResponse.body!.getReader()
         const decoder = new TextDecoder()
 
         try {
