@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma'
-import { GUEST_USER_ID } from '@/lib/auth'
+import { GUEST_USER_ID, auth } from '@/lib/auth'
 import { NextRequest } from 'next/server'
 
 export const runtime = 'nodejs'
@@ -37,9 +37,12 @@ export async function POST(req: NextRequest) {
       extractedText = buffer.toString('utf-8').slice(0, 50000)
     }
 
+    const session = await auth()
+    const userId = session?.user?.id || GUEST_USER_ID
+
     const record = await prisma.fileUpload.create({
       data: {
-        userId: GUEST_USER_ID,
+        userId,
         chatId: chatId || null,
         name: `${GUEST_USER_ID}/${Date.now()}-${file.name}`,
         originalName: file.name,
