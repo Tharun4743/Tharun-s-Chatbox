@@ -58,6 +58,18 @@ export function MarkdownRenderer({ content, isStreaming }: MarkdownRendererProps
               </a>
             )
           },
+          img({ src, alt }) {
+            return (
+              <div className="flex flex-col items-center my-6">
+                <div className="relative group overflow-hidden rounded-[2rem] border border-border/40 shadow-xl shadow-foreground/5 transition-transform hover:scale-[1.02] duration-500">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt={alt} className="max-w-full h-auto block" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors pointer-events-none" />
+                </div>
+                {alt && <span className="mt-3 text-[10px] uppercase tracking-widest font-bold text-muted-foreground/50">{alt}</span>}
+              </div>
+            )
+          },
         }}
       >
         {content}

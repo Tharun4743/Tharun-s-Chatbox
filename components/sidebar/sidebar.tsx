@@ -108,7 +108,7 @@ export function Sidebar({
         ) : chatGroups.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
             <div className="h-12 w-12 rounded-2xl bg-muted flex items-center justify-center mb-3">
-              <Sparkles className="h-5 w-5 text-muted-foreground" />
+              <Sparkle className="h-5 w-5 text-muted-foreground" />
             </div>
             <p className="text-sm font-medium text-muted-foreground">
               {search ? 'No chats found' : 'No conversations yet'}
