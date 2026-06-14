@@ -139,25 +139,6 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
         </motion.div>
       </div>
 
-      <div className="w-full text-center px-4 pointer-events-none pb-6 md:pb-8 mt-auto">
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground/40 pointer-events-auto"
-        >
-          Crafted with 🖤 by{" "}
-          <a
-            href="https://tharunkumark4743.netlify.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary hover:text-primary/80 underline-offset-4 hover:underline transition-colors"
-          >
-            Tharun Kumar
-          </a>
-        </motion.p>
-      </div>
-
       <ChatInput
         onSend={handleSend}
         onStop={() => {}}

@@ -137,16 +137,6 @@ export function Sidebar({
 
       <div className="flex flex-col gap-2 p-3 border-t border-border/30 bg-muted/20">
         <UserMenu />
-        {!collapsed && (
-          <a
-            href="https://tharunkumark4743.netlify.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[9px] uppercase tracking-[0.2em] font-bold text-muted-foreground/40 hover:text-primary text-center py-2 transition-colors"
-          >
-            Built with 🖤 by Tharun Kumar
-          </a>
-        )}
       </div>
     </div>
   )

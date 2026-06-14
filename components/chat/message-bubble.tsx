@@ -109,6 +109,7 @@ export function MessageBubble({ message, isLastAssistant, onEdit, onDelete, onRe
               className={cn(isUser && 'text-primary-foreground prose-user')}
             />
           </div>
+        )}
 
         <div className={cn('flex items-center gap-2 mt-1 px-1', isUser ? 'flex-row-reverse' : 'flex-row')}>
           {/* Use a simple span for time to avoid hydration mismatch by ensuring it's stable during initial render */}

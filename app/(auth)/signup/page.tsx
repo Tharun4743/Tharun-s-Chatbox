@@ -93,13 +93,6 @@ export default function SignupPage() {
             Sign in here
           </Link>
         </p>
-
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-px w-24 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
-          <p className="text-[9px] uppercase tracking-[0.4em] font-black text-muted-foreground/30 text-center">
-            Designed by Tharun Kumar<br/>Truly Human AI Edition
-          </p>
-        </div>
       </div>
     </motion.div>
   )

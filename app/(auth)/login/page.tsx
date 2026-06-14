@@ -84,13 +84,6 @@ export default function LoginPage() {
             Create an account
           </Link>
         </p>
-        
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-px w-24 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
-          <p className="text-[9px] uppercase tracking-[0.4em] font-black text-muted-foreground/30">
-            Techy Tharun • Premium Edition
-          </p>
-        </div>
       </div>
     </motion.div>
   )
