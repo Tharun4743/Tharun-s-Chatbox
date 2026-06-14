@@ -21,20 +21,27 @@ export async function POST(req: NextRequest) {
 
   if (!file) return Response.json({ error: 'No file provided' }, { status: 400 })
   if (file.size > MAX_FILE_SIZE) return Response.json({ error: 'File too large. Max 5MB.' }, { status: 413 })
-  if (!ALLOWED_TYPES.includes(file.type)) return Response.json({ error: 'File type not supported' }, { status: 415 })
+
+  const extension = file.name.split('.').pop()?.toLowerCase() || ''
+  const isAllowedMime = ALLOWED_TYPES.includes(file.type)
+  const isAllowedExt = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf', 'docx', 'doc', 'txt', 'md', 'csv', 'json'].includes(extension)
+
+  if (!isAllowedMime && !isAllowedExt) {
+    return Response.json({ error: 'File type not supported' }, { status: 415 })
+  }
 
   try {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
     let extractedText = ''
 
-    if (file.type === 'application/pdf') {
+    if (file.type === 'application/pdf' || extension === 'pdf') {
       const pdfParse = (await import('pdf-parse')).default
       extractedText = (await pdfParse(buffer)).text.slice(0, 50000)
-    } else if (file.type.includes('word') || file.type.includes('document')) {
+    } else if (file.type.includes('word') || file.type.includes('document') || extension === 'docx' || extension === 'doc') {
       const mammoth = await import('mammoth')
       extractedText = (await mammoth.extractRawText({ buffer })).value.slice(0, 50000)
-    } else if (file.type.startsWith('text/')) {
+    } else if (file.type.startsWith('text/') || ['txt', 'md', 'csv', 'json', 'js', 'ts', 'tsx', 'jsx', 'html', 'css', 'py'].includes(extension)) {
       extractedText = buffer.toString('utf-8').slice(0, 50000)
     }
 

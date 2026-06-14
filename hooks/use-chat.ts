@@ -79,10 +79,20 @@ export function useChat({ chatId, userId, mode = 'normal' }: UseChatOptions) {
       abortControllerRef.current = abortController
 
       try {
-        const messagesToSend = [...previousMessages, userMessage].map((m) => ({
-          role: m.role,
-          content: m.content,
-        }))
+        const messagesToSend = [...previousMessages, userMessage].map((m, idx) => {
+          if (idx === previousMessages.length && attachments?.length) {
+            let contentWithContext = m.content
+            const fileContext = attachments
+              .filter((a) => a.extractedText)
+              .map((a) => `[File Content: ${a.name}]\n${a.extractedText}`)
+              .join('\n\n')
+            if (fileContext) {
+              contentWithContext += `\n\n${fileContext}`
+            }
+            return { role: m.role, content: contentWithContext }
+          }
+          return { role: m.role, content: m.content }
+        })
 
         const response = await fetch('/api/chat', {
           method: 'POST',
