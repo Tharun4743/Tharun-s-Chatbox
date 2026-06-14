@@ -40,8 +40,9 @@ export default function LoginPage() {
           transition={{ delay: 0.1, duration: 0.4 }}
           className="flex justify-center mb-6"
         >
-          <div className="h-16 w-16 rounded-[2.5rem] bg-foreground text-background flex items-center justify-center shadow-2xl shadow-foreground/10 rotate-3">
-            <Sparkle className="h-8 w-8" />
+          <div className="h-16 w-16 rounded-full overflow-hidden border border-border flex items-center justify-center shadow-2xl shadow-foreground/10 rotate-3 bg-background">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
           </div>
         </motion.div>
         <h2 className="text-4xl font-serif tracking-tight text-foreground">Welcome back</h2>

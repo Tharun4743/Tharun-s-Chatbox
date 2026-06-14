@@ -64,8 +64,9 @@ export function Sidebar({
     <div className={cn('flex flex-col h-full border-r border-border/50 bg-sidebar', className)}>
       <div className="flex items-center gap-2 p-4 border-b border-border/30">
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <div className="h-8 w-8 rounded-[0.75rem] bg-foreground text-background flex items-center justify-center flex-shrink-0 shadow-sm">
-            <Sparkle className="h-4 w-4" />
+          <div className="h-8 w-8 rounded-full overflow-hidden border border-border flex-shrink-0 shadow-sm flex items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
           </div>
           <span className="font-serif font-bold text-sm truncate tracking-tight">Techy Tharun</span>
         </div>

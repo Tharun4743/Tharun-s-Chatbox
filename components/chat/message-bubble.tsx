@@ -76,8 +76,9 @@ export function MessageBubble({ message, isLastAssistant, onEdit, onDelete, onRe
       onMouseLeave={() => setShowActions(false)}
     >
       {!isUser && (
-        <div className="h-10 w-10 rounded-2xl bg-foreground text-background flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-foreground/5 rotate-3 hover:rotate-0 transition-transform duration-500">
-          <Sparkle className="h-5 w-5" />
+        <div className="h-10 w-10 rounded-full overflow-hidden border border-border flex-shrink-0 mt-1 shadow-lg shadow-foreground/5 rotate-3 hover:rotate-0 transition-transform duration-500 bg-background flex items-center justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Assistant Logo" className="h-full w-full object-cover" />
         </div>
       )}
 
