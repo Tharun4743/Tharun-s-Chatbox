@@ -53,6 +53,23 @@ export function MarkdownRenderer({ content, isStreaming }: MarkdownRendererProps
             return <>{children}</>
           },
           a({ href, children }) {
+            const isAttachment = href?.startsWith('data:')
+            if (isAttachment) {
+              const fileName = String(children).replace(/^📁\s*/, '')
+              return (
+                <a
+                  href={href}
+                  download={fileName}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 my-1 bg-muted/80 hover:bg-muted border border-border/60 rounded-xl text-xs font-medium text-foreground transition-all duration-200 active:scale-[0.98] no-underline max-w-full truncate"
+                >
+                  <span className="text-sm">📁</span>
+                  <span className="truncate max-w-[150px] md:max-w-[250px]">{fileName}</span>
+                  <span className="text-[10px] text-primary/80 ml-1 uppercase font-bold tracking-wider">
+                    Download
+                  </span>
+                </a>
+              )
+            }
             return (
               <a href={href} target="_blank" rel="noopener noreferrer">
                 {children}
@@ -65,12 +82,12 @@ export function MarkdownRenderer({ content, isStreaming }: MarkdownRendererProps
               return <ImageWithProgress src={src} alt={alt} />
             }
             return (
-              <div className="relative my-4 max-w-full overflow-hidden rounded-xl border border-border/20 shadow-md">
+              <div className="relative my-2 max-w-[300px] md:max-w-[450px] overflow-hidden rounded-xl border border-border/20 shadow-sm bg-muted/20">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}
                   alt={alt || "Uploaded image"}
-                  className="max-h-[350px] w-auto max-w-full object-contain mx-auto transition-transform hover:scale-[1.02] duration-300"
+                  className="max-h-[220px] w-auto max-w-full object-contain mx-auto transition-transform hover:scale-[1.02] duration-300"
                 />
               </div>
             )
