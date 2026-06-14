@@ -4,6 +4,7 @@ import { CHAT_MODES } from '@/types'
 import { NextRequest } from 'next/server'
 import { auth } from '@/auth'
 import { fetchWithFallback, recordTokenUsage } from '@/lib/key-manager'
+import prisma from '@/lib/prisma'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -77,9 +78,9 @@ ${attachmentContext}
 DO NOT claim you cannot read files. The content is provided above.`
     }
 
-    const formatMessageContent = (content: string) => {
-      // Regex to match markdown images with base64 data URLs
-      const regex = /!\[(.*?)\]\((data:image\/[a-zA-Z+-]+;base64,[a-zA-Z0-9+/=]+)\)/g
+    const formatMessageContent = async (content: string) => {
+      // Regex to match markdown images with base64 data URLs OR /api/upload?id=...
+      const regex = /!\[(.*?)\]\((data:image\/[a-zA-Z+-]+;base64,[a-zA-Z0-9+/=]+|(\/api\/upload\?id=([^)]+)))\)/g
       
       let match
       const parts: any[] = []
@@ -90,7 +91,23 @@ DO NOT claim you cannot read files. The content is provided above.`
         if (textBefore) {
           parts.push({ type: 'text', text: textBefore })
         }
-        const imageUrl = match[2]
+        
+        let imageUrl = match[2]
+        const fileId = match[4]
+        
+        if (fileId) {
+          try {
+            const record = await prisma.fileUpload.findUnique({
+              where: { id: fileId }
+            })
+            if (record && record.url) {
+              imageUrl = record.url
+            }
+          } catch (err) {
+            console.error('Error fetching image for chat:', err)
+          }
+        }
+        
         parts.push({
           type: 'image_url',
           image_url: {
@@ -110,10 +127,10 @@ DO NOT claim you cannot read files. The content is provided above.`
 
     const openRouterMessages = [
       { role: 'system', content: systemContent },
-      ...messages.slice(-20).map((m: any) => ({
+      ...await Promise.all(messages.slice(-20).map(async (m: any) => ({
         role: m.role,
-        content: m.role === 'user' ? formatMessageContent(m.content) : m.content
-      })),
+        content: m.role === 'user' ? await formatMessageContent(m.content) : m.content
+      }))),
     ]
 
     const abortController = new AbortController()

@@ -39,10 +39,11 @@ export function useChat({ chatId, userId, mode = 'normal' }: UseChatOptions) {
       if (attachments?.length) {
         const attachmentLinks = attachments
           .map((a) => {
+            const attachmentUrl = a.id ? `/api/upload?id=${a.id}` : (a.url || '')
             if (a.mimeType.startsWith('image/')) {
-              return `\n\n![${a.name}](${a.url || ''})`
+              return `\n\n![${a.name}](${attachmentUrl})`
             } else {
-              return `\n\n📁 [${a.name}](${a.url || ''})`
+              return `\n\n📁 [${a.name}](${attachmentUrl})`
             }
           })
           .join('')

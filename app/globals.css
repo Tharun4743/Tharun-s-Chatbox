@@ -192,3 +192,28 @@
 .focus-ring {
   @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
 }
+
+/* User Message Prose Color Overrides */
+.prose-user {
+  color: inherit !important;
+}
+.prose-user p,
+.prose-user h1,
+.prose-user h2,
+.prose-user h3,
+.prose-user li,
+.prose-user blockquote,
+.prose-user th,
+.prose-user td,
+.prose-user code:not(pre code) {
+  color: inherit !important;
+}
+.prose-user a:not([download]) {
+  color: inherit !important;
+  opacity: 0.9;
+  text-decoration: underline;
+}
+.prose-user a[download] {
+  color: var(--foreground) !important;
+}
+

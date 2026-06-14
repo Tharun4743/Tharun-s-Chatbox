@@ -15,14 +15,15 @@ import { cn } from '@/lib/utils'
 interface MarkdownRendererProps {
   content: string
   isStreaming?: boolean
+  className?: string
 }
 
-export function MarkdownRenderer({ content, isStreaming }: MarkdownRendererProps) {
+export function MarkdownRenderer({ content, isStreaming, className }: MarkdownRendererProps) {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
 
   return (
-    <div className={cn('prose-chat', isStreaming && 'typing-cursor')}>
+    <div className={cn('prose-chat', isStreaming && 'typing-cursor', className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
@@ -53,7 +54,7 @@ export function MarkdownRenderer({ content, isStreaming }: MarkdownRendererProps
             return <>{children}</>
           },
           a({ href, children }) {
-            const isAttachment = href?.startsWith('data:')
+            const isAttachment = href?.startsWith('data:') || href?.includes('/api/upload?id=')
             if (isAttachment) {
               const fileName = String(children).replace(/^📁\s*/, '')
               return (

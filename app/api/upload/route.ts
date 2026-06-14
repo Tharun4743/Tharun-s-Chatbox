@@ -34,15 +34,22 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
     let extractedText = ''
+    let parsingError: string | null = null
 
-    if (file.type === 'application/pdf' || extension === 'pdf') {
-      const pdfParse = (await import('pdf-parse')).default
-      extractedText = (await pdfParse(buffer)).text.slice(0, 50000)
-    } else if (file.type.includes('word') || file.type.includes('document') || extension === 'docx' || extension === 'doc') {
-      const mammoth = await import('mammoth')
-      extractedText = (await mammoth.extractRawText({ buffer })).value.slice(0, 50000)
-    } else if (file.type.startsWith('text/') || ['txt', 'md', 'csv', 'json', 'js', 'ts', 'tsx', 'jsx', 'html', 'css', 'py'].includes(extension)) {
-      extractedText = buffer.toString('utf-8').slice(0, 50000)
+    try {
+      if (file.type === 'application/pdf' || extension === 'pdf') {
+        const pdfParse = (await import('pdf-parse')).default
+        extractedText = (await pdfParse(buffer)).text.slice(0, 50000)
+      } else if (file.type.includes('word') || file.type.includes('document') || extension === 'docx' || extension === 'doc') {
+        const mammoth = await import('mammoth')
+        extractedText = (await mammoth.extractRawText({ buffer })).value.slice(0, 50000)
+      } else if (file.type.startsWith('text/') || ['txt', 'md', 'csv', 'json', 'js', 'ts', 'tsx', 'jsx', 'html', 'css', 'py'].includes(extension)) {
+        extractedText = buffer.toString('utf-8').slice(0, 50000)
+      }
+    } catch (err: any) {
+      console.error('File content extraction failed:', err)
+      parsingError = err?.message || String(err)
+      extractedText = `[Note: Content extraction failed: ${parsingError}]`
     }
 
     const session = await auth()
@@ -54,7 +61,7 @@ export async function POST(req: NextRequest) {
 
     // Convert file to Base64 Data URL to be 100% serverless and persistent on Render
     const base64Data = buffer.toString('base64')
-    const fileUrl = `data:${file.type};base64,${base64Data}`
+    const fileUrl = `data:${file.type || 'application/octet-stream'};base64,${base64Data}`
 
     const record = await prisma.fileUpload.create({
       data: {
@@ -62,26 +69,67 @@ export async function POST(req: NextRequest) {
         chatId: chatId || null,
         name: file.name,
         originalName: file.name,
-        mimeType: file.type,
+        mimeType: file.type || 'application/octet-stream',
         size: file.size,
         url: fileUrl,
         extractedText,
-        status: 'ready',
+        status: parsingError ? 'error' : 'ready',
+        errorMessage: parsingError,
       },
     })
 
     return Response.json({
       id: record.id,
       name: file.name,
-      mimeType: file.type,
+      mimeType: file.type || 'application/octet-stream',
       size: file.size,
       url: fileUrl,
       extractedText: extractedText.slice(0, 1000),
       fullText: extractedText,
-      status: 'ready',
+      status: parsingError ? 'error' : 'ready',
+      errorMessage: parsingError,
     })
   } catch (err) {
     console.error('Upload error:', err)
     return Response.json({ error: 'Failed to process file' }, { status: 500 })
+  }
+}
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url)
+  const id = searchParams.get('id')
+
+  if (!id) {
+    return Response.json({ error: 'Missing file ID' }, { status: 400 })
+  }
+
+  try {
+    const record = await prisma.fileUpload.findUnique({
+      where: { id },
+    })
+
+    if (!record) {
+      return Response.json({ error: 'File not found' }, { status: 404 })
+    }
+
+    // Parse base64 data url from database
+    const match = record.url.match(/^data:([^;]+);base64,(.+)$/)
+    if (!match) {
+      return Response.json({ error: 'Invalid file data' }, { status: 500 })
+    }
+
+    const contentType = match[1]
+    const base64Data = match[2]
+    const buffer = Buffer.from(base64Data, 'base64')
+
+    return new Response(buffer, {
+      headers: {
+        'Content-Type': contentType,
+        'Content-Disposition': `inline; filename="${encodeURIComponent(record.originalName)}"`,
+      },
+    })
+  } catch (err) {
+    console.error('File fetch error:', err)
+    return Response.json({ error: 'Failed to fetch file' }, { status: 500 })
   }
 }

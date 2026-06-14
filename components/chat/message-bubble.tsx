@@ -104,12 +104,11 @@ export function MessageBubble({ message, isLastAssistant, onEdit, onDelete, onRe
             'rounded-2xl px-4 py-3 text-sm leading-relaxed',
             isUser ? 'bg-primary text-primary-foreground rounded-tr-sm' : 'bg-muted/50 text-foreground rounded-tl-sm'
           )}>
-            {isUser
-              ? <p className="whitespace-pre-wrap break-words">{message.content}</p>
-              : <MarkdownRenderer content={message.content} />
-            }
+            <MarkdownRenderer
+              content={message.content}
+              className={cn(isUser && 'text-primary-foreground prose-user')}
+            />
           </div>
-        )}
 
         <div className={cn('flex items-center gap-2 mt-1 px-1', isUser ? 'flex-row-reverse' : 'flex-row')}>
           {/* Use a simple span for time to avoid hydration mismatch by ensuring it's stable during initial render */}
