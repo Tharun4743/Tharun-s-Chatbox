@@ -46,7 +46,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         onDeleteChat={deleteChat}
         onPinChat={pinChat}
         onRenameChat={renameChat}
-        className={cn('hidden md:flex transition-all duration-300', sidebarCollapsed ? 'w-16' : 'w-72')}
+        className={cn('hidden md:flex transition-all duration-300', sidebarCollapsed ? 'w-16' : 'w-80')}
       />
 
       {sidebarOpen && (
@@ -62,7 +62,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             onDeleteChat={deleteChat}
             onPinChat={pinChat}
             onRenameChat={renameChat}
-            className="relative z-50 w-72 flex"
+            className="relative z-50 w-80 flex"
           />
         </div>
       )}

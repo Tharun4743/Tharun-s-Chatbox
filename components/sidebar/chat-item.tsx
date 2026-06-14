@@ -90,7 +90,7 @@ export function ChatItem({ chat, onDelete, onPin, onRename }: ChatItemProps) {
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  className="h-6 w-6 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="h-6 w-6 flex-shrink-0 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={(e) => e.preventDefault()}
                 >
                   <MoreHorizontal className="h-3.5 w-3.5" />

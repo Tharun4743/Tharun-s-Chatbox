@@ -61,23 +61,28 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
           </motion.div>
 
           {/* Greeting */}
-          <motion.h1
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-3xl md:text-5xl font-serif tracking-tight mb-4 flex flex-col sm:flex-row items-center justify-center gap-3 text-foreground"
+            className="text-center mb-8"
           >
-            {greeting}
-            <span className="animate-bounce-slow text-4xl sm:text-inherit">👋</span>
-          </motion.h1>
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground flex items-center justify-center gap-3 font-serif">
+              {greeting}
+              <span className="animate-bounce-slow text-4xl sm:text-inherit">👋</span>
+            </h1>
+            <p className="text-lg md:text-2xl text-muted-foreground mt-3 font-medium tracking-wide">
+              Welcome to Techy Tharun's Chatbox
+            </p>
+          </motion.div>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-muted-foreground/60 max-w-md mx-auto mb-12 text-base md:text-lg font-medium italic"
+            className="text-muted-foreground/50 max-w-md mx-auto mb-12 text-xs md:text-sm font-semibold tracking-widest uppercase italic"
           >
-            "Simply secure • Simply Techy Tharun"
+            Simply Secure • Simply Techy Tharun
           </motion.p>
         </motion.div>
       </div>
