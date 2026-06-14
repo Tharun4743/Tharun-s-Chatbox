@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { getWarmGreeting, PROMPT_SUGGESTIONS } from '@/lib/utils'
-import { CHAT_MODES } from '@/types'
-import { Button } from '@/components/ui/button'
-import { Sparkle, ArrowRight } from 'lucide-react'
+import { getWarmGreeting } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { ChatInput } from './chat-input'
 import type { FileAttachment } from '@/types'
@@ -82,61 +79,6 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
           >
             "Simply secure • Simply Techy Tharun"
           </motion.p>
-
-          {/* Mode cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12"
-          >
-            {Object.entries(CHAT_MODES).slice(0, 4).map(([key, mode]) => (
-              <button
-                key={key}
-                suppressHydrationWarning
-                className="flex flex-col items-center gap-3 p-5 rounded-[2rem] bg-secondary/30 border border-transparent hover:border-primary/20 hover:bg-secondary/50 transition-all duration-300 group"
-                onClick={async () => {
-                  try {
-                    const res = await fetch('/api/chats', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ title: `${mode.label} Chat`, mode: key }),
-                    })
-                    if (!res.ok) throw new Error('Failed to create chat')
-                    const data = await res.json()
-                    if (data.chat) router.push(`/chat/${data.chat.id}`)
-                  } catch {
-                    toast({ title: 'Error', description: 'Failed to start chat. Please try again.', variant: 'destructive' })
-                  }
-                }}
-              >
-                <div className="h-12 w-12 rounded-2xl bg-background flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
-                  <span className="text-2xl group-hover:scale-110 transition-transform">{mode.icon}</span>
-                </div>
-                <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground group-hover:text-primary transition-colors">{mode.label}</span>
-              </button>
-            ))}
-          </motion.div>
-
-          {/* Suggestion chips */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="flex sm:flex-wrap items-center justify-start sm:justify-center gap-3 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
-          >
-            {PROMPT_SUGGESTIONS.slice(0, 4).map((suggestion) => (
-              <button
-                key={suggestion.text}
-                suppressHydrationWarning
-                className="flex flex-shrink-0 items-center gap-2 px-6 py-3 rounded-full bg-background hover:bg-secondary border border-border/40 hover:border-primary/20 text-xs font-semibold text-muted-foreground hover:text-primary transition-all duration-300 shadow-sm"
-                onClick={() => handleSend(suggestion.text)}
-              >
-                <span>{suggestion.text}</span>
-                <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
-            ))}
-          </motion.div>
         </motion.div>
       </div>
 
