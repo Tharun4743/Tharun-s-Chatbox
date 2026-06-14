@@ -60,7 +60,20 @@ export function MarkdownRenderer({ content, isStreaming }: MarkdownRendererProps
             )
           },
           img({ src, alt }) {
-            return <ImageWithProgress src={src} alt={alt} />
+            const isGenerated = src?.includes('pollinations.ai')
+            if (isGenerated) {
+              return <ImageWithProgress src={src} alt={alt} />
+            }
+            return (
+              <div className="relative my-4 max-w-full overflow-hidden rounded-xl border border-border/20 shadow-md">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={src}
+                  alt={alt || "Uploaded image"}
+                  className="max-h-[350px] w-auto max-w-full object-contain mx-auto transition-transform hover:scale-[1.02] duration-300"
+                />
+              </div>
+            )
           },
         }}
       >

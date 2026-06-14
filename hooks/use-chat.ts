@@ -35,12 +35,26 @@ export function useChat({ chatId, userId, mode = 'normal' }: UseChatOptions) {
           .join('\n\n')
       }
 
+      let finalContent = content
+      if (attachments?.length) {
+        const attachmentLinks = attachments
+          .map((a) => {
+            if (a.mimeType.startsWith('image/')) {
+              return `\n\n![${a.name}](${a.url || ''})`
+            } else {
+              return `\n\n📁 [${a.name}](${a.url || ''})`
+            }
+          })
+          .join('')
+        finalContent += attachmentLinks
+      }
+
       const userMessage: Message = {
         id: `temp-${Date.now()}`,
         chatId: chatId || '',
         userId,
         role: 'user',
-        content,
+        content: finalContent,
         model: null,
         tokensUsed: 0,
         cost: 0,

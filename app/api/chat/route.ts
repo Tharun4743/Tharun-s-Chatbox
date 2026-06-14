@@ -77,9 +77,43 @@ ${attachmentContext}
 DO NOT claim you cannot read files. The content is provided above.`
     }
 
+    const formatMessageContent = (content: string) => {
+      // Regex to match markdown images with base64 data URLs
+      const regex = /!\[(.*?)\]\((data:image\/[a-zA-Z+-]+;base64,[a-zA-Z0-9+/=]+)\)/g
+      
+      let match
+      const parts: any[] = []
+      let lastIndex = 0
+      
+      while ((match = regex.exec(content)) !== null) {
+        const textBefore = content.substring(lastIndex, match.index).trim()
+        if (textBefore) {
+          parts.push({ type: 'text', text: textBefore })
+        }
+        const imageUrl = match[2]
+        parts.push({
+          type: 'image_url',
+          image_url: {
+            url: imageUrl,
+          },
+        })
+        lastIndex = regex.lastIndex
+      }
+      
+      const textAfter = content.substring(lastIndex).trim()
+      if (textAfter) {
+        parts.push({ type: 'text', text: textAfter })
+      }
+      
+      return parts.length > 0 ? parts : content
+    }
+
     const openRouterMessages = [
       { role: 'system', content: systemContent },
-      ...messages.slice(-20).map((m: any) => ({ role: m.role, content: m.content })),
+      ...messages.slice(-20).map((m: any) => ({
+        role: m.role,
+        content: m.role === 'user' ? formatMessageContent(m.content) : m.content
+      })),
     ]
 
     const abortController = new AbortController()

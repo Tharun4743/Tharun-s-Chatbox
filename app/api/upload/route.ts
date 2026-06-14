@@ -45,14 +45,19 @@ export async function POST(req: NextRequest) {
       await ensureGuestUser()
     }
 
+    // Convert file to Base64 Data URL to be 100% serverless and persistent on Render
+    const base64Data = buffer.toString('base64')
+    const fileUrl = `data:${file.type};base64,${base64Data}`
+
     const record = await prisma.fileUpload.create({
       data: {
         userId,
         chatId: chatId || null,
-        name: `${GUEST_USER_ID}/${Date.now()}-${file.name}`,
+        name: file.name,
         originalName: file.name,
         mimeType: file.type,
         size: file.size,
+        url: fileUrl,
         extractedText,
         status: 'ready',
       },
@@ -63,7 +68,7 @@ export async function POST(req: NextRequest) {
       name: file.name,
       mimeType: file.type,
       size: file.size,
-      url: '',
+      url: fileUrl,
       extractedText: extractedText.slice(0, 1000),
       fullText: extractedText,
       status: 'ready',
