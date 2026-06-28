@@ -223,7 +223,7 @@ export function ChatInput({ onSend, onStop, onModeChange, isStreaming, isThinkin
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={isListening ? '🎤 Listening...' : 'Message ChatBox... (/ for commands)'}
+            placeholder={isListening ? '🎤 Listening...' : "Message Techy Tharun's Chatbox... (/ for commands)"}
             className="min-h-[52px] max-h-[200px] resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-4 py-3.5 pr-32 text-sm placeholder:text-muted-foreground/60"
             disabled={isDisabled && !isStreaming}
           />
@@ -290,7 +290,7 @@ export function ChatInput({ onSend, onStop, onModeChange, isStreaming, isThinkin
         </div>
 
         <p className="text-center text-xs text-muted-foreground/50 mt-2">
-          ChatBox can make mistakes. Consider checking important information.
+          Techy Tharun's Chatbox can make mistakes. Consider checking important information.
         </p>
       </div>
     </div>

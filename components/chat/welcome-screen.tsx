@@ -67,9 +67,9 @@ export function WelcomeScreen({ user }: WelcomeScreenProps) {
             transition={{ delay: 0.2 }}
             className="text-center mb-8"
           >
-            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground flex items-center justify-center gap-3 font-serif">
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground text-center font-serif">
               {greeting}
-              <span className="animate-bounce-slow text-4xl sm:text-inherit">👋</span>
+              <span className="inline-block animate-bounce-slow text-4xl sm:text-inherit ml-3">👋</span>
             </h1>
             <p className="text-lg md:text-2xl text-muted-foreground mt-3 font-medium tracking-wide">
               Welcome to Techy Tharun's Chatbox
