@@ -1,58 +1,34 @@
-# Techy Tharun's Chatbox 🚀
+# Techy Tharun's Chatbox
 
-A high-performance, premium AI assistant powered by **GPT-4o**. Featuring a sleek, humanized interface and optimized for speed.
+A modern, high-performance, and feature-rich AI chat application built with Next.js 15, React 18, and Tailwind CSS. The app features robust conversational memory, intelligent API key rotation, load balancing across multiple LLM providers (Groq, OpenRouter, OpenAI), and seamless deployment integration with Render.
 
-![Techy Tharun's Chatbox](public/favicon.ico)
+## Features
 
-## ✨ Features
+- **Multi-Provider Fallback**: Seamlessly switches between Groq, OpenRouter, and OpenAI keys when limits are reached or services are down.
+- **Smart Key Manager**: Load-balances requests across comma-separated keys stored in your `.env` to prevent rate limiting (HTTP 429 errors).
+- **Persistent Memory**: Saves all conversations and messages to a secure PostgreSQL database using Prisma ORM.
+- **Streaming UI**: Uses Server-Sent Events (SSE) to stream AI responses dynamically just like ChatGPT/Gemini.
+- **Chat Modes**: Includes different context-aware modes (Code Assistant, Resume Reviewer, Document Analyzer, etc.) via pre-configured system prompts.
+- **Responsive & Premium Design**: Implemented with Radix UI, Framer Motion, and Tailwind CSS for a beautiful user experience with Dark/Light mode support.
 
-- **Extreme Performance**: Parallelized backend operations for near-zero latency streaming.
-- **Humanized UI**: Empathetic authentication flow and sleek, modern glassmorphism design.
-- **Multi-Device Support**: Optimized for the local network and PWA-ready for mobile installation.
-- **Advanced Tools**: Supports file attachments (PDF, Doc, TXT), voice input, and markdown rendering.
-- **Personalized Branding**: Fully customized experience under the "Techy Tharun" identity.
+## Tech Stack
 
-## 🛠️ Technology Stack
+- **Framework**: Next.js 15 (App Router)
+- **Database**: PostgreSQL (Neon Serverless) / Prisma ORM
+- **Authentication**: NextAuth.js (Auth.js) v5
+- **Styling**: Tailwind CSS, class-variance-authority, clsx
+- **Components**: Radix UI
+- **Deployment**: Configured for immediate deployment on Render (`render.yaml` included).
 
-- **Framework**: Next.js 15 (App Router, Turbopack)
-- **Styling**: Tailwind CSS + Framer Motion
-- **Authentication**: NextAuth.js (v5 Beta)
-- **Database**: Prisma ORM with Neon (Serverless PostgreSQL)
-- **AI Engine**: OpenRouter (GPT-4o)
-- **Language**: TypeScript
+## Deployment (Render)
 
-## 🚀 Getting Started
+This project is pre-configured for automated deployment on [Render](https://render.com/). It uses a `render.yaml` blueprint to define the environment.
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/Tharun4743/Tharun-s-Chatbox.git
-cd Tharun-s-Chatbox
-```
+1. Connect your GitHub repository to Render.
+2. Select **Blueprint** and use the provided `render.yaml`.
+3. Provide the required Environment Variables (`DATABASE_URL`, `AUTH_SECRET`, `NEXTAUTH_SECRET`, `GROQ_API_KEYS`, etc.).
+4. The blueprint handles the build step (`npm install && npx prisma generate && npx prisma db push --accept-data-loss && npm run build`) and starts the server automatically.
 
-### 2. Install dependencies
-```bash
-npm install
-```
+## License
 
-### 3. Environment Variables
-Copy the example environment file and fill in your credentials:
-```bash
-cp .env.example .env.local
-```
-*(Ensure you never commit your actual `.env.local` file)*
-
-### 4. Run the development server
-```bash
-npm run dev
-```
-
-## 🏗️ Deployment
-
-This project is optimized for deployment on **Render** via the provided `render.yaml` blueprint.
-
-1. Connect your repository to Render.
-2. Select **Blueprint**.
-3. Set your secret environment variables in the dashboard.
-
----
-Made with ❤️ by [Techy Tharun](https://github.com/Tharun4743)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
