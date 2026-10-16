@@ -53,6 +53,23 @@ Organizations and developers relying on conversational AI wrappers face persiste
 ---
 
 ## 4. ⚙️ Technical Approach & System Architecture
+
+### 📐 High-Level Architectural Flowchart:
+```mermaid
+graph TD
+    User["Client Chat Interface (Next.js / TypeScript)"] -->|Streaming Query| StreamRouter["SSE Gateway & Stream Dispatcher"]
+    StreamRouter --> KeyRotator["Token-Aware Multi-Key Rotator"]
+    KeyRotator --> RateLimiter["Sliding Window Rate Guard"]
+    RateLimiter --> HealthCheck{"Primary Provider Healthy?"}
+    HealthCheck -->|Yes| Gemini["Google Gemini 1.5 Pro / Flash"]
+    HealthCheck -->|Failover Triggered| Groq["Groq LPU (LLaMA 3 70B Sub-Second)"]
+    HealthCheck -->|Secondary Failover| OpenAI["OpenAI GPT-4o Fallback Tier"]
+    Gemini -->|Server-Sent Events| StreamRouter
+    Groq -->|Server-Sent Events| StreamRouter
+    OpenAI -->|Server-Sent Events| StreamRouter
+    StreamRouter -->|Token By Token Streaming| User
+```
+
 ### ⚙️ Deep Technical Architecture
 
 | Architectural Layer | Core Technologies | Functional Responsibilities |
