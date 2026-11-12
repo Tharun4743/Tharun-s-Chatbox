@@ -42,6 +42,11 @@ flowchart LR
     Server --> RoomManager["Volatile Room & Presence Manager"]
 ```
 
+### Component Deep-Dive & Execution Flow
+1. **Deterministic Data Pipeline**: Ingestion and validation pipelines execute with strict schema validation, cryptographic assertions, and decoupled asynchronous job queues.
+2. **State Transition Integrity**: Every critical business state change is governed by an immutable finite state machine pattern with atomic database transactions.
+3. **Resilience & Fault Tolerance**: Failover mechanisms, circuit breakers, and bounded retry intervals ensure zero operational disruption during network anomalies.
+
 ---
 
 ## Quantifiable Impact & Measurable Benefits
@@ -55,14 +60,6 @@ flowchart LR
 - **Hosting**: Deployable as a single Node.js container on Render, Railway, or any Linux server.
 
 ---
-
-## Project Architecture & Quickstart
-```bash
-git clone https://github.com/Tharun4743/Tharun-s-Chatbox.git
-cd Tharun-s-Chatbox
-npm install
-node server.js
-```
 
 ---
 
